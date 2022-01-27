@@ -26,17 +26,39 @@ public class MarkdownParse {
         // find the next [, then find the ], then find the (, then take up to
         // the next )
         int currentIndex = 0;
-        while(currentIndex < markdown.length()) {
-            int nextOpenBracket = markdown.indexOf("[", currentIndex);
+        while (currentIndex < markdown.length()) {
+            int nextOpenBracket = indexOfUnescaped(markdown, "[", currentIndex);
             if (nextOpenBracket == -1) {
                 break;
             }
-            int nextCloseBracket = markdown.indexOf("]", nextOpenBracket);
-            int openParen = markdown.indexOf("(", nextCloseBracket);
-            int closeParen = markdown.indexOf(")", openParen);
-            toReturn.add(markdown.substring(openParen + 1, closeParen));
+            int nextCloseBracket = indexOfUnescaped(markdown, "]", nextOpenBracket);
+            int openParen = indexOfUnescaped(markdown, "(", nextCloseBracket);
+            if (openParen == -1) {
+                break;
+            }
+            int closeParen = indexOfUnescaped(markdown, ")", openParen);
+            int nextOpenParen = indexOfUnescaped(markdown, "(", openParen + 1);
+            if (nextOpenParen != -1 && closeParen > nextOpenParen) {
+                // Invalid link because there's an open paren before the close paren
+                int openBracket = indexOfUnescaped(markdown, "[", openParen);
+                if (openBracket != -1) {
+                    // Maybe there's another link
+                    currentIndex = openBracket;
+                    continue;
+                } else {
+                    break;
+                }
+            }
+            if (closeParen == -1) {
+                break;
+            }
+            // Check that this isn't an image link
+            if (!(nextOpenBracket > 0 && markdown.charAt(nextOpenBracket - 1) == '!')) {
+                String substr = markdown.substring(openParen + 1, closeParen);
+                substr = substr.replaceAll("\\\\(.)", "$1");
+                toReturn.add(substr);
+            }
             currentIndex = closeParen + 1;
-            System.out.println(currentIndex);
         }
         return toReturn;
     }
