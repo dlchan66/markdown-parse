@@ -9,9 +9,9 @@ import java.util.List;
 public class MarkdownParseTest {
     
     @Test
-    public void testNewline() throws IOException {
-        String contents= Files.readString(Path.of("./test-newline-file.md"));
-        List<String> expect = List.of("https://something.com", "some-page.html");
+    public void testUnclosedBracket() throws IOException {
+        String contents= Files.readString(Path.of("./test-unclosed-bracket.md"));
+        List<String> expect = List.of("https://example.com");
         assertEquals(MarkdownParse.getLinks(contents), expect);
     }
     
