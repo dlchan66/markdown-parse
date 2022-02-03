@@ -11,7 +11,7 @@ public class MarkdownParseTest {
     @Test
     public void testUnclosedParen() throws IOException {
         String contents= Files.readString(Path.of("./test-unclosed-paren.md"));
-        List<String> expect = List.of("https://example1.com");
+        List<String> expect = List.of("https://example2.com");
         assertEquals(MarkdownParse.getLinks(contents), expect);
     }
     
