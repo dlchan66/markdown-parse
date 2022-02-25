@@ -9,10 +9,10 @@ import java.util.List;
 public class MarkdownParseTest {
     
     @Test
-    public void testUnclosedParen() throws IOException {
-        String contents= Files.readString(Path.of("./test-unclosed-paren.md"));
-        List<String> expect = List.of("https://example.com");
-        assertEquals(MarkdownParse.getLinks(contents), expect);
+    public void testSnippet3() throws IOException {
+        String contents= Files.readString(Path.of("./snippet3.md"));
+        List<String> expect = List.of("https://www.twitter.com", "https://ucsd-cse15l-w22.github.io/", "github.com", "https://cse.ucsd.edu/");
+        assertEquals(expect, MarkdownParse.getLinks(contents));
     }
     
 }
